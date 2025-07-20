@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <AssemblyName>UltraDirector</AssemblyName>
+        <Product>UltraDirector</Product>
+        <GUID>com.10-days-till-xmas.ultradirector</GUID>
+        <Version>1.0.0</Version>
+        <Nullable>enable</Nullable>
+        <LangVersion>13.0</LangVersion>
+        <RootNamespace>UltraDirector</RootNamespace>
+        <UltrakillDir>D:/Projects/C#/Ultramodding/_testing/patch_16d/</UltrakillDir> <!-- Ensure that this has BepInEx installed -->
+        <CopyToBepInExPluginsDir>true</CopyToBepInExPluginsDir>
+    
+        <RestoreAdditionalProjectSources>
+            https://nuget.bepinex.dev/v3/index.json;
+            https://nuget.samboy.dev/v3/index.json
+        </RestoreAdditionalProjectSources>
+        <GenerateDependencyFile>false</GenerateDependencyFile>
+        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    </PropertyGroup>
+
+    <Import Project="Properties/DeployToPlugins.targets"/>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.*"/>
+        <PackageReference Include="UltraModding.PluginInfoGenerator" Version="4.*"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.28" IncludeAssets="compile"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>$(UltrakillDir)ULTRAKILL_Data/Managed/Assembly-CSharp.dll</HintPath>
+            <Private>false</Private>
+            <CopyLocal>false</CopyLocal>
+        </Reference>
+        <Reference Include="plog">
+          <HintPath>..\..\_testing\patch_16d\ULTRAKILL_Data\Managed\plog.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+</Project>
