@@ -7,7 +7,7 @@ namespace UltraDirector.CameraLogic.ConsoleCommands;
 public static class CommandLineParser
 {
     /// <summary>
-    /// Splits a command-line string into an array of arguments, 
+    /// Splits a command-line string into an array of arguments,
     /// similar to how Windows processes command-line input.
     /// </summary>
     /// <param name="input">The raw command-line string.</param>

@@ -10,11 +10,11 @@ public sealed class ConsolePatcher
 {
     [HarmonyPostfix]
     [HarmonyPatch("Awake")]
-    private static void AddCheatCodes(Console __instance)
+    private static void RegisterCommands(Console __instance)
     {
         __instance.RegisterCommand(new CameraRootCommand(__instance));
-        
-        Plugin.Logger.LogInfo("Added camera command");
+
+        Plugin.Logger.LogInfo("Added camera root command");
     }
 
     [HarmonyPrefix]
@@ -22,7 +22,7 @@ public sealed class ConsolePatcher
     private static bool ParseImproved(string text, ref string[] __result)
     {
         __result = CommandLineParser.Parse(text);
-        return false;
+        return false; // i cba to transpile
     }
 
     [HarmonyTranspiler]
@@ -54,7 +54,7 @@ public sealed class ConsolePatcher
             .InsertAndAdvance(new CodeInstruction(OpCodes.Ldc_I4_0), // isComplete = false
                 new CodeInstruction(OpCodes.Call, customParseMethod)
                 );
-        
+
         return codeMatcher.InstructionEnumeration();
     }
 }

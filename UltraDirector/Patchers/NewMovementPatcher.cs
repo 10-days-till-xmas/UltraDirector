@@ -16,8 +16,8 @@ public class NewMovementPatcher
 
     private static void SpawnCameraIfKeyPressed(NewMovement __instance)
     {
-        if (!Input.GetKeyDown(CameraManager.Instance.SpawnCameraKey)) return;
-        
+        if (!Input.GetKeyDown(CameraManager.Instance!.SpawnCameraKey)) return;
+
         Log("Spawning player camera...");
         var playerPos = __instance.transform.position + new Vector3(0, 1.5f, 0);
         var playerRot = Quaternion.Euler(__instance.transform.eulerAngles);

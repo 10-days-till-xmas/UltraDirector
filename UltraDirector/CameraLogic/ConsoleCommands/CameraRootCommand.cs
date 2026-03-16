@@ -14,20 +14,11 @@ public sealed partial class CameraRootCommand(Console con) : CommandRoot(con), I
     {
         return Branch("camera",
             Leaf("list", ListCameras),
-            Leaf<string>("spawn", SpawnCamera),
-            Leaf<string>("remove", RemoveCamera),
-            Branch("get",
-                Leaf<string>("summary", GetCameraSummary),
-                Leaf<string>("depth", GetCameraDepth),
-                Leaf<string>("rectSize", GetCameraRectSize),
-                Leaf<string>("rectPosition", GetCameraRectPosition)
-                ),
-            Branch("set",
-                Leaf<string, float>("depth", SetCameraDepth),
-                Leaf<string, float, float>("rectSize", SetCameraRectSize),
-                Leaf<string, float, float>("rectPosition", SetCameraRectPosition)
-                )
-            #if DEBUG 
+            Leaf<string>("spawn", SpawnCamera), // <id>
+            Leaf<string>("remove", RemoveCamera), // <id>
+            CameraGet_,
+            CameraSet_
+            #if DEBUG
           , Branch("debug",
                 Branch("prefs",
                     Leaf<string>("setSpawnKey", SetSpawnCameraKey),

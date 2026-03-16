@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="UltraDirector.Scripting.CSharp/UltraDirector.Scripting.CSharp.csproj" />
+  <Project Path="UltraDirector.Tests/UltraDirector.Tests.csproj" />
+  <Project Path="UltraDirector/UltraDirector.csproj" />
+</Solution>

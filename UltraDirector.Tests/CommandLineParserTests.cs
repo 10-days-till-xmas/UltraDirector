@@ -21,8 +21,8 @@ public sealed class CommandLineParserTests
           command "arg with \"quotes\""
           """, ["command", "arg with \"quotes\""] },
     };
-    
-    
+
+
     [Theory]
     [MemberData(nameof(commandLineData))]
     public void TestParsing(string input, string[] expected)
@@ -31,7 +31,7 @@ public sealed class CommandLineParserTests
         Assert.Equal(expected.Length, result.Length);
         Assert.Equal(expected, result);
     }
-    
+
     [Fact]
     public void ThrowsIfUnclosedQuotes()
     {

@@ -1,18 +1,37 @@
 ﻿using System;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace UltraDirector.CameraLogic;
+[PublicAPI]
 [Serializable]
-public sealed class UKCamera(Camera camera)
+[RequireComponent(typeof(Camera))]
+public sealed class UKCamera : MonoBehaviour
 {
-    // TODO: fix skybox rendering
-    public Camera UnityCamera { get; } = camera;
-    public string Name => UnityCamera.gameObject.name;
-    
-    public void SetActive(bool isActive = true)
+    [field: SerializeField]
+    public Camera UnityCamera { get; private set; } = null!;
+    public string Name => gameObject.name;
+    public event Action? OnUpdate = null;
+    public event Action? OnLateUpdate = null;
+    public event Action? OnFixedUpdate = null;
+
+    // TODO: make this spawn a window and have a record method too
+
+    private void Awake()
     {
-        UnityCamera.enabled = isActive;
+        // TODO: MAKE A FUCKING PREFAB FOR THIS
+        UnityCamera = gameObject.GetOrAddComponent<Camera>();
+        // CameraManager.Instance!.AddCamera(this);
     }
+    private void OnEnable() => UnityCamera.enabled = true;
+    private void OnDisable() => UnityCamera.enabled = false;
+    private void OnDestroy() => CameraManager.Instance!.Cameras.Remove(Name);
+    private void Update() => OnUpdate?.Invoke();
+    private void LateUpdate() => OnLateUpdate?.Invoke();
+    private void FixedUpdate() => OnFixedUpdate?.Invoke();
+
+    public void StartRecording(string outputPath) => throw new NotImplementedException("Recording functionality is not implemented yet.");
+    public void StopRecording() => throw new NotImplementedException("Recording functionality is not implemented yet.");
 
     public override string ToString()
     {
@@ -22,5 +41,4 @@ public sealed class UKCamera(Camera camera)
                $"Rotation: {UnityCamera.transform.rotation.eulerAngles}, " +
                $"Depth: {UnityCamera.depth})";
     }
-    // TODO: implement an event for when the camera is removed
 }
