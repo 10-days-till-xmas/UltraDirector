@@ -22,7 +22,6 @@ public sealed class CommandLineParserTests
           """, ["command", "arg with \"quotes\""] },
     };
 
-
     [Theory]
     [MemberData(nameof(commandLineData))]
     public void TestParsing(string input, string[] expected)

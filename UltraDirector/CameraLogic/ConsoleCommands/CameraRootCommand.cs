@@ -1,5 +1,6 @@
 ﻿using GameConsole;
 using GameConsole.CommandTree;
+using UltraDirector.PreviewWindow;
 using Logger = plog.Logger;
 
 namespace UltraDirector.CameraLogic.ConsoleCommands;
@@ -17,7 +18,8 @@ public sealed partial class CameraRootCommand(Console con) : CommandRoot(con), I
             Leaf<string>("spawn", SpawnCamera), // <id>
             Leaf<string>("remove", RemoveCamera), // <id>
             CameraGet_,
-            CameraSet_
+            CameraSet_,
+            Window
             #if DEBUG
           , Branch("debug",
                 Branch("prefs",
