@@ -24,7 +24,7 @@ public sealed class CameraReplManager : MonoSingleton<CameraReplManager>, IConso
         Repl = gameObject.GetOrAddComponent<CSharpRepl>();
         Log.RegisterToConsole();
     }
-    
+
     public void Activate()
     {
         IsActive = true;

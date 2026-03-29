@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
   <Target Name="DeployToPlugins" AfterTargets="Build" 
-          Condition="'$(CopyToBepInExPluginsDir)' == 'true'" >
+          Condition="'$(CopyToBepInExPluginsDir)' == 'true' and $(SuppressDeployment) != 'true' " >
     
     <PropertyGroup>
       <BepInExPluginsDir>$(UltrakillDir)BepInEx/plugins/</BepInExPluginsDir>

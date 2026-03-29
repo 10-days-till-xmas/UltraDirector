@@ -1,6 +1,5 @@
 ﻿using GameConsole;
 using GameConsole.CommandTree;
-using UltraDirector.PreviewWindow;
 using Logger = plog.Logger;
 
 namespace UltraDirector.CameraLogic.ConsoleCommands;

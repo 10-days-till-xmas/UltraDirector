@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using HarmonyLib;
 using GameConsole;
+using HarmonyLib;
+using UltraDirector.Scripting.CSharp.ConsoleCommands;
 using UltraDirector.Scripting.CSharp.ReplManagement;
 
-namespace UltraDirector.Scripting.CSharp.ConsoleCommands;
+namespace UltraDirector.Scripting.CSharp.Patchers;
 
 [HarmonyPatch(typeof(Console))]
 public class ConsolePatcher

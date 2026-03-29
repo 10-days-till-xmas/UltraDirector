@@ -1,7 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace UltraDirector.CameraLogic;
 [PublicAPI]

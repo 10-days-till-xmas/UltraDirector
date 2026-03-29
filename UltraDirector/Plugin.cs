@@ -5,7 +5,6 @@ using BepInEx.Logging;
 using HarmonyLib;
 using HarmonyLib.Tools;
 using UltraDirector.CameraLogic.ConsoleCommands;
-using UltraDirector.LogUtils;
 using UnityEngine;
 [assembly: InternalsVisibleTo("UltraDirector.Scripting.CSharp")]
 namespace UltraDirector;

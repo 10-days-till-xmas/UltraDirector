@@ -1,6 +1,5 @@
 ﻿using UltraDirector.CameraLogic;
 using UltraDirector.Scripting.CSharp.ReplManagement;
-using UltraDirector.Scripting.CSharp.Utils;
 
 namespace UltraDirector.Scripting.CSharp.ConsoleCommands;
 
@@ -22,8 +21,8 @@ public sealed partial class CameraControlCommand
         }
 
         Plugin.Logger.LogInfo("Selecting camera: " + cameraName);
-        var cm = SingletonHelpers.GetSingleton<CameraManager>();
-        Plugin.Logger.LogInfo("SingletonHelpers.GetSingleton<CameraManager>() = " + cm);
+        var cm = CameraManager.Instance!;
+        Plugin.Logger.LogInfo("CameraManager.Instance = " + cm);
 
         if (!cm.Cameras.TryGetValue(cameraName, out var ukCamera))
         {

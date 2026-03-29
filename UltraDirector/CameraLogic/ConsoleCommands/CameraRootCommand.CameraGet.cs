@@ -1,5 +1,4 @@
-﻿using System;
-using GameConsole.CommandTree;
+﻿using GameConsole.CommandTree;
 using UltraDirector.Utils;
 
 namespace UltraDirector.CameraLogic.ConsoleCommands;

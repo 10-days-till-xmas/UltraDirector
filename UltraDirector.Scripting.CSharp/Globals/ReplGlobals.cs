@@ -1,10 +1,7 @@
-using System;
-using System.Linq;
 using JetBrains.Annotations;
 using UltraDirector.CameraLogic;
 using UltraDirector.Scripting.CSharp.ReplManagement;
 using Logger = plog.Logger;
-using Object = UnityEngine.Object;
 
 namespace UltraDirector.Scripting.CSharp.Globals;
 

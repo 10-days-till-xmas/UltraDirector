@@ -1,9 +1,5 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using GameConsole.CommandTree;
-using UltraDirector.CameraLogic.Extensions;
+﻿using System.Diagnostics.CodeAnalysis;
 using UltraDirector.LogUtils;
-using UltraDirector.Utils;
 using UnityEngine;
 
 namespace UltraDirector.CameraLogic.ConsoleCommands;
