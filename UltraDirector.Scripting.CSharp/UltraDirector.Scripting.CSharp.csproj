@@ -31,8 +31,12 @@
   </ItemGroup>
   
   <Target Name="Copy Libs to output folder" BeforeTargets="DeployToPlugins" DependsOnTargets="ResolvePackageAssets">
+    
+    
     <PropertyGroup>
       <DestinationDir>$(MSBuildProjectDirectory)/$(OutputPath)/Lib</DestinationDir>
+      <DestinationDir Condition="'$([System.IO.Path]::IsPathRooted($(OutputPath)))'">$(OutputPath)/Lib</DestinationDir>
+
       <RoslynPackageIds>
         Microsoft.CodeAnalysis.CSharp;
         Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -43,7 +47,8 @@
         System.Reflection.Metadata;
       </RoslynPackageIds>
     </PropertyGroup>
-    
+    <Message Importance="High" Condition="!Exists('$(DestinationDir)')"
+                 Text="Creating destination directory: $(DestinationDir)" />
     <MakeDir Condition="!Exists('$(DestinationDir)')"
              Directories="$(DestinationDir)"/>
     <ItemGroup>

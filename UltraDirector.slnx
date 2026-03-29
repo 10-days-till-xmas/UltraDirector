@@ -2,4 +2,12 @@
   <Project Path="UltraDirector.Scripting.CSharp/UltraDirector.Scripting.CSharp.csproj" />
   <Project Path="UltraDirector.Tests/UltraDirector.Tests.csproj" />
   <Project Path="UltraDirector/UltraDirector.csproj" />
+  <Folder Name="/Scripting/">
+    <Project Path="UltraDirector.Scripting.CSharp/UltraDirector.Scripting.CSharp.csproj" Type="Plugin" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="UltraDirector.Tests/UltraDirector.Tests.csproj" />
+  </Folder>
+  <Project Path="UltraDirector.Deployment/UltraDirector.Deployment.csproj" />
+  <Project Path="UltraDirector/UltraDirector.csproj" Type="Plugin"/>
 </Solution>
