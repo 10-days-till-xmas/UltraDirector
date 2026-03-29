@@ -6,13 +6,13 @@
     <Product>UltraDirector</Product>
     <GUID>com.10-days-till-xmas.ultradirector</GUID>
     <Version>1.0.0</Version>
+    
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>14.0</LangVersion>
     <RootNamespace>UltraDirector</RootNamespace>
     <UltrakillDir>D:/Projects/C#/_Ultramodding/_testing/patch_17c/</UltrakillDir> <!-- Ensure that this has BepInEx installed -->
     <CopyToBepInExPluginsDir>true</CopyToBepInExPluginsDir>
-
     <RestoreAdditionalProjectSources>
       https://nuget.bepinex.dev/v3/index.json;
       https://nuget.samboy.dev/v3/index.json
@@ -21,6 +21,8 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
+
+  <Import Project="Properties/TSProps.props"/>
   <Import Project="Properties/DeployToPlugins.targets"/>
   
   <ItemGroup>

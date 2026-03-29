@@ -1,0 +1,5 @@
+﻿<Project>
+  <ItemGroup Label="Thunderstore Dependencies">
+    <ThunderDependency Include="BepInEx-BepInExPack-5.4.2100"/>
+  </ItemGroup>
+</Project>

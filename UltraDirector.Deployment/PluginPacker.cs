@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using System.Xml.Linq;
-using JetBrains.Annotations;
+﻿using System.Xml.Linq;
 using Path = System.IO.Path;
 
 namespace UltraDirector.Deployment;
@@ -8,13 +6,13 @@ namespace UltraDirector.Deployment;
 public sealed class PluginPacker(PluginInfo pluginInfo)
 {
     private DirectoryPath projectDir => pluginInfo.projectDir;
-    public static readonly DirectoryPath tempDir = DirectoryPath.FromString(Path.GetTempPath()).Combine($"Cake_{Guid.NewGuid().ToString()[..4]}/");
+    public static readonly DirectoryPath TempDir = DirectoryPath.FromString(Path.GetTempPath()).Combine($"Cake_{Guid.NewGuid().ToString()[..4]}/");
+    private readonly DirectoryPath tempDir = TempDir.Combine(pluginInfo.pluginProject.Name);
     private FilePath csprojFilePath => pluginInfo.csprojFilePath;
-    
+
     public async Task Pack()
     {
-        if (!DirectoryExists(tempDir)) throw new DirectoryNotFoundException($"Directory {tempDir} does not exist");
-        var buildOutputDir = tempDir.Combine(pluginInfo.pluginProject.Name);
+        if (!DirectoryExists(tempDir)) throw new DirectoryNotFoundException($"Directory {TempDir} does not exist");
         var iconFile = projectDir.CombineWithFilePath("icon.png");
         if (!FileExists(iconFile)) throw new FileNotFoundException($"Icon file not found at {iconFile}");
         var readmeFile = projectDir.CombineWithFilePath("README.md");
@@ -23,6 +21,7 @@ public sealed class PluginPacker(PluginInfo pluginInfo)
         CopyFileToDirectory(iconFile, tempDir);
         CopyFileToDirectory(readmeFile, tempDir);
         SerializeJsonToPrettyFile(tempDir.CombineWithFilePath("manifest.json"), await ReadCsproj());
+        Context.SerializeJsonToPrettyFile(tempDir.CombineWithFilePath("manifest.json"), await ReadCsproj());
         var packageDir = (DirectoryPath)"./packages/";
         CreateDirectory(packageDir);
         var package = packageDir.CombineWithFilePath($"{pluginInfo.pluginProject.Name}.zip");
@@ -32,7 +31,7 @@ public sealed class PluginPacker(PluginInfo pluginInfo)
             MakeAbsolute(package).FullPath);
     }
 
-    private async Task<ManifestInfo> ReadCsproj(CancellationToken ct = default)
+    private async Task<JObject> ReadCsproj(CancellationToken ct = default)
     {
         await using var csprojFile = Context.FileSystem.GetFile(csprojFilePath).OpenRead();
         var doc = await XDocument.LoadAsync(csprojFile, LoadOptions.None, ct);
@@ -58,21 +57,22 @@ public sealed class PluginPacker(PluginInfo pluginInfo)
 
         var version = properties.GetValueOrDefault("Version", "0.1.0");
         var description = properties.GetValueOrDefault("Description", "");
+
         var dependencies = doc.Root.Descendants(ns + "ItemGroup")
                               .SelectMany(pg => pg.Elements("ThunderDependency"))
                               .Select(e => e.Attribute("Include")?.Value)
-                              .OfType<string>()
-                              .Where(static p => !string.IsNullOrWhiteSpace(p))
-                              .ToList();
-        var manifest = new ManifestInfo(
-            name,
-            description,
-            version,
-            Dependencies: dependencies
-        );
+                              .Where(static p => !string.IsNullOrWhiteSpace(p));
+        var manifest = new JObject
+        {
+            { "name", name },
+            { "description", description },
+            { "version_number", version },
+            { "website_url", ""},
+            { "dependencies", new JArray(dependencies) }
+        };
         return manifest;
     }
-    
+
     private static bool HasBom(string filePath)
     {
         var buffer = new byte[4];
@@ -87,11 +87,4 @@ public sealed class PluginPacker(PluginInfo pluginInfo)
             _ => false
         };
     }
-    [UsedImplicitly]
-    private sealed record ManifestInfo(
-        [property: JsonPropertyName("name")] string Name,
-        [property: JsonPropertyName("description")] string Description,
-        [property: JsonPropertyName("version_number")] string VersionNumber,
-        [property: JsonPropertyName("dependencies")] List<string> Dependencies,
-        [property: JsonPropertyName("website_url")] string WebsiteUrl = "");
 }

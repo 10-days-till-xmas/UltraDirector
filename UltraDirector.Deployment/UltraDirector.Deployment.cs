@@ -6,6 +6,7 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 #endregion
 
+#region Gather Plugins
 var slnFile = FilePath.FromString("./UltraDirector.slnx");
 var slnParsed = ParseSolution(slnFile);
 
@@ -18,28 +19,27 @@ var plugins = projects.Values
                            return new PluginInfo(p, configuration, testProj);
                        })
                       .ToList();
+#endregion
 
-//////////////////////////////////////////////////////////////////////
-// TASKS
-//////////////////////////////////////////////////////////////////////
+#region Define Tasks
 
-Setup(_ =>
+Setup(static _ =>
 {
-    CreateDirectory(PluginPacker.tempDir);
-    Information($"Created temp directory at {PluginPacker.tempDir}");
+    CreateDirectory(PluginPacker.TempDir);
+    Information($"Created temp directory at {PluginPacker.TempDir}");
 });
-Teardown(_ =>
+Teardown(static _ =>
 {
-    DeleteDirectory(PluginPacker.tempDir, new DeleteDirectorySettings()
+    DeleteDirectory(PluginPacker.TempDir, new DeleteDirectorySettings()
     {
         Force = true, Recursive = true
     });
-    Information($"Deleted temp directory at {PluginPacker.tempDir}");
+    Information($"Deleted temp directory at {PluginPacker.TempDir}");
 });
 
 Task("Clean")
    .IsDependeeOf("Default")
-   .WithCriteria(c => HasArgument("rebuild"))
+   .WithCriteria(static _ => HasArgument("rebuild"))
    .Does(() => CleanDirectory($"./**/bin/{configuration}"));
 
 foreach (var plugin in plugins)
@@ -54,16 +54,24 @@ foreach (var plugin in plugins)
        .IsDependeeOf("Default")
        .Does(_ =>
         {
+            var outDir = PluginPacker.TempDir.Combine(name);
             DotNetBuild(plugin.pluginProject.Path.FullPath, new DotNetBuildSettings
             {
                 Configuration = configuration,
-                OutputDirectory = PluginPacker.tempDir.Combine(name),
+                OutputDirectory = outDir,
                 ArgumentCustomization = args => args.Append("/p:SuppressDeployment=true")
             });
+            var unusedFiles = GetFiles(outDir.FullPath + "/*", new GlobberSettings()
+                {
+                    FilePredicate =
+                        f => f.Path.GetFilenameWithoutExtension().ToString() != plugin.pluginProject.Path.GetFilenameWithoutExtension()
+                });
+            DeleteFiles(unusedFiles);
         });
 
     Task(testTask)
        .IsDependentOn(buildTask)
+       .IsDependeeOf("Default")
        .WithCriteria(() => plugin.testProject != null, "Plugin does not have a test project")
        .Does(() =>
         {
@@ -80,6 +88,7 @@ foreach (var plugin in plugins)
        .Does(async Task () => await new PluginPacker(plugin).Pack());
 }
 
-Task("Default").Does(() => {});
+Task("Default").Does(static () => {});
+#endregion
 
 RunTarget(target);
