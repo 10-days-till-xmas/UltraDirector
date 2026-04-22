@@ -48,7 +48,7 @@ public class ConsolePatcher
     [HarmonyPatch("FindSuggestions")]
     private static bool DisableSuggestions(Console __instance)
     {
-        if (!CameraReplManager.Instance!.IsActive) return true;
+        if (!CameraReplManager.TryGetInstance(out var cpm) || !cpm.IsActive) return true;
         suggestionsRef(__instance).Clear();
         return false;
     }

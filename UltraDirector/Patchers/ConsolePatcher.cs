@@ -2,9 +2,10 @@
 using System.Reflection.Emit;
 using GameConsole;
 using HarmonyLib;
+using UltraDirector.CameraLogic.ConsoleCommands;
 
-namespace UltraDirector.CameraLogic.ConsoleCommands;
-// TODO: add scripting extensions for advanced control over the cameras
+namespace UltraDirector.Patchers;
+
 [HarmonyPatch(typeof(Console))]
 public sealed class ConsolePatcher
 {
@@ -14,7 +15,7 @@ public sealed class ConsolePatcher
     {
         __instance.RegisterCommand(new CameraRootCommand(__instance));
 
-        Plugin.Logger.LogInfo("Added camera root command");
+        LogInfo("Added camera root command");
     }
 
     [HarmonyPrefix]

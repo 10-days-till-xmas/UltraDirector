@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Threading;
-using Microsoft.CodeAnalysis.Scripting;
 
 namespace UltraDirector.Scripting.CSharp.AutoScripter;
 

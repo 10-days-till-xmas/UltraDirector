@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 // ReSharper disable ParameterHidesMember
@@ -15,19 +16,14 @@ namespace UltraDirector.CameraLogic;
 public sealed class CameraManager : MonoSingleton<CameraManager>
 {
     internal KeyCode SpawnCameraKey { get; set; } = KeyCode.F1;
-    internal UKCamera DefaultCamera { get; private set; } = null!;
 
     public Dictionary<string, UKCamera> Cameras { get; } = new();
 
     // TODO: properly handle reinstantiation between scenes, and maybe setup events for if cameras are destroyed or added
     private void Awake()
     {
-        var obj = new GameObject("CameraManager");
-        DefaultCamera = obj.AddComponent<UKCamera>();
-        Cameras.Add(DefaultCamera.Name, DefaultCamera);
         DontDestroyOnLoad(this);
-        Log("CameraManager initialized.");
-        Log($"Default camera set to: {DefaultCamera.Name}");
+        LogInfo("CameraManager initialized.");
     }
 
     public void AddCamera(UKCamera camera)
@@ -39,10 +35,10 @@ public sealed class CameraManager : MonoSingleton<CameraManager>
             return;
         }
 
-        Log($"Camera {camera.Name} added successfully.");
+        LogInfo($"Camera {camera.Name} added successfully.");
     }
 
-    public bool TrySpawnCamera(string name, Vector3 position, Quaternion rotation, out UKCamera? camera)
+    public bool TrySpawnCamera(string name, Vector3 position, Quaternion rotation, [NotNullWhen(true)] out UKCamera? camera)
     {
         if (Cameras.TryGetValue(name, out camera))
         {
@@ -59,7 +55,6 @@ public sealed class CameraManager : MonoSingleton<CameraManager>
             }
         };
         var unityCamera = camObject.AddComponent<Camera>();
-        unityCamera.CopyFrom(DefaultCamera.UnityCamera);
         unityCamera.depth = CameraDepth.Hidden;
         camera = camObject.AddComponent<UKCamera>();
 
@@ -72,11 +67,11 @@ public sealed class CameraManager : MonoSingleton<CameraManager>
     {
         if (!Cameras.TryGetValue(name, out var camera)) return;
 
-        Destroy(camera.UnityCamera.gameObject);
+        Destroy(camera.Camera.gameObject);
         Cameras.Remove(name);
     }
 
-    private void OnDestroy() => Log("CameraManager is being destroyed.");
+    private void OnDestroy() => LogInfo("CameraManager is being destroyed.");
 
-    private void OnDisable() => Log("CameraManager is being disabled.");
+    private void OnDisable() => LogInfo("CameraManager is being disabled.");
 }

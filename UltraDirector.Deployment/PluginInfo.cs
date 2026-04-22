@@ -6,7 +6,7 @@ public sealed class PluginInfo
     public readonly SolutionProject? testProject;
     public readonly DirectoryPath projectDir;
     public readonly FilePath csprojFilePath;
-    public PluginInfo(SolutionProject pluginProject, string configuration, SolutionProject? testProject = null)
+    public PluginInfo(SolutionProject pluginProject, SolutionProject? testProject = null)
     {
         this.pluginProject = pluginProject;
         this.testProject = testProject;

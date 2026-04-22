@@ -1,11 +1,11 @@
 <Solution>
   <Folder Name="/Scripting/">
-    <Project Path="UltraDirector.Scripting.CSharp/UltraDirector.Scripting.CSharp.csproj" Type="Plugin" />
+    <Project Path="UltraDirector.Scripting.CSharp/UltraDirector.Scripting.CSharp.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="UltraDirector.Scripting.CSharp.Tests/UltraDirector.Scripting.CSharp.Tests.csproj" />
     <Project Path="UltraDirector.Tests/UltraDirector.Tests.csproj" />
   </Folder>
   <Project Path="UltraDirector.Deployment/UltraDirector.Deployment.csproj" />
-  <Project Path="UltraDirector/UltraDirector.csproj" Type="Plugin"/>
+  <Project Path="UltraDirector/UltraDirector.csproj" Type="C#" />
 </Solution>

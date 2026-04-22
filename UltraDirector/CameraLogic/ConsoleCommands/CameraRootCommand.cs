@@ -16,16 +16,15 @@ public sealed partial class CameraRootCommand(Console con) : CommandRoot(con), I
             Leaf("list", ListCameras),
             Leaf<string>("spawn", SpawnCamera), // <id>
             Leaf<string>("remove", RemoveCamera), // <id>
+            Leaf<string>("start-recording", StartRecording),
+            Leaf<string, float>("start-recording-t", StartRecordingWithTime),
+            Leaf<string>("stop-recording", StopRecording),
+            Leaf<string>("remux", RemuxVideo),
             CameraGet_,
             CameraSet_,
             Window
             #if DEBUG
-          , Branch("debug",
-                Branch("prefs",
-                    Leaf<string>("setSpawnKey", SetSpawnCameraKey),
-                    Leaf("listKeyCodes", ListKeyCodes)
-                    )
-                )
+          , Debug
             #endif
             );
     }

@@ -17,19 +17,19 @@ public sealed partial class CameraRootCommand
        .IfNotNullDo(c => Log.Info($"Camera '{c.Name}' details: {c}"));
 
     private void GetCameraDepth(string name) => TryGetCamera(name)
-       .IfNotNullDo(c => Log.Info($"Camera '{c.Name}' depth: {c.UnityCamera.depth}"));
+       .IfNotNullDo(c => Log.Info($"Camera '{c.Name}' depth: {c.Camera.depth}"));
 
     private void GetCameraRectSize(string name) => TryGetCamera(name)
        .IfNotNullDo(camera =>
         {
-            var rectSize = camera.UnityCamera.rect.size;
+            var rectSize = camera.Camera.rect.size;
             Log.Info($"Camera \"{name}\" rect size: ({rectSize.x}, {rectSize.y})");
         });
 
     private void GetCameraRectPosition(string name) => TryGetCamera(name)
        .IfNotNullDo(camera =>
         {
-            var rectPos = camera.UnityCamera.rect.position;
+            var rectPos = camera.Camera.rect.position;
             Log.Info($"Camera \"{name}\" rect position: ({rectPos.x}, {rectPos.y})");
         });
 }

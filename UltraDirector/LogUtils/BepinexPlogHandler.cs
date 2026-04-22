@@ -6,7 +6,7 @@ using Logger = plog.Logger;
 
 namespace UltraDirector.LogUtils;
 
-public class BepinexPlogHandler(ManualLogSource logger) : ILogHandler
+public sealed class BepinexPlogHandler(ManualLogSource logger) : ILogHandler
 {
     public Log HandleRecord(Logger source, Log log)
     {
@@ -15,31 +15,31 @@ public class BepinexPlogHandler(ManualLogSource logger) : ILogHandler
         switch (log.Level)
         {
             case Level.Debug:
-                logger.LogDebug(prefix + message);
+                logger.LogDebug($"[{prefix}] {message}");
                 break;
             case Level.Info:
-                logger.LogInfo(prefix + message);
+                logger.LogInfo($"[{prefix}] {message}");
                 break;
             case Level.Warning:
-                logger.LogWarning(prefix + message);
+                logger.LogWarning($"[{prefix}] {message}");
                 break;
             case Level.Error:
-                logger.LogError(prefix + message);
+                logger.LogError($"[{prefix}] {message}");
                 break;
             case Level.Exception:
-                logger.LogFatal(prefix + message);
+                logger.LogFatal($"[{prefix}] {message}");
                 break;
             case Level.Off:
-                logger.Log(LogLevel.None, prefix + message);
+                logger.Log(LogLevel.None, $"[{prefix}] {message}");
                 break;
             case Level.Fine:
-                logger.LogDebug(prefix + "Level.Fine: " + message);
+                logger.LogDebug($"{prefix} Level.Fine: {message}");
                 break;
             case Level.CommandLine:
-                logger.LogDebug(prefix + "Level.CommandLine: " + message);
+                logger.LogDebug($"{prefix} Level.CommandLine: {message}");
                 break;
             case Level.Config:
-                logger.LogDebug(prefix + "Level.Config: " + message);
+                logger.LogDebug($"{prefix} Level.Config: {message}");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

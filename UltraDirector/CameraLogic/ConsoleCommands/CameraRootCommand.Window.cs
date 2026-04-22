@@ -15,7 +15,7 @@ public sealed partial class CameraRootCommand
         TryGetCamera(obj).IfNotNullDo(c =>
         {
             var window = c.gameObject.AddComponent<Window>();
-            window.camera = c.UnityCamera;
+            window.camera = c.Camera;
             window.Show();
         });
 

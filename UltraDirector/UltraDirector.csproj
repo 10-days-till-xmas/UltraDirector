@@ -5,7 +5,7 @@
     <AssemblyName>UltraDirector</AssemblyName>
     <Product>UltraDirector</Product>
     <GUID>com.10-days-till-xmas.ultradirector</GUID>
-    <Version>1.0.0</Version>
+    <Version>0.1.0</Version>
     
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -21,6 +21,9 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="UltraDirector.Scripting.CSharp" />
+  </ItemGroup>
 
   <Import Project="Properties/TSProps.props"/>
   <Import Project="Properties/DeployToPlugins.targets"/>
@@ -29,6 +32,7 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
     <PackageReference Include="BepInEx.Core" Version="5.*"/>
     <PackageReference Include="FFMediaToolkit" Version="4.8.1" />
+    <!--<PackageReference Include="FFmpeg.LGPL" Version="20260418.1.0" />-->
     <PackageReference Include="UltraModding.PluginInfoGenerator" Version="4.*"/>
     <PackageReference Include="UnityEngine.Modules" Version="2022.3.28" IncludeAssets="compile"/>
   </ItemGroup>
@@ -45,5 +49,43 @@
       <CopyLocal>false</CopyLocal>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ffmpeg\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CameraLogic\Input\" />
+  </ItemGroup>
+  
+  <Target Name="Copy libs to output folder" BeforeTargets="DeployToPlugins" DependsOnTargets="ResolvePackageAssets">
+    
+    <PropertyGroup>
+      <DestinationDir>$(MSBuildProjectDirectory)/$(OutputPath)/Lib</DestinationDir>
+      <DestinationDir Condition="'$([System.IO.Path]::IsPathRooted($(OutputPath)))'">$(OutputPath)/Lib</DestinationDir>
+
+      <PackageIds>
+        FFMediaToolkit;
+        FFmpeg.AutoGen
+      </PackageIds>
+    </PropertyGroup>
+    <Message Importance="High" Condition="!Exists('$(DestinationDir)')"
+             Text="Creating destination directory: $(DestinationDir)" />
+    <MakeDir Condition="!Exists('$(DestinationDir)')"
+             Directories="$(DestinationDir)"/>
+    <ItemGroup>
+      <RuntimeAssets
+          Include="@(RuntimeCopyLocalItems)"
+          Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' != '' and $([System.String]::Copy('$(PackageIds)').Contains('%(RuntimeCopyLocalItems.NuGetPackageId)'))" />
+    </ItemGroup>
+
+    <Message Importance="High"
+             Text="Copying asset: %(RuntimeAssets.Identity) | PackageId=%(RuntimeAssets.NuGetPackageId)" />
+
+    <Copy SourceFiles="@(RuntimeAssets)"
+          DestinationFolder="$(DestinationDir)\%(RecursiveDir)"/>
+  </Target>
 
 </Project>

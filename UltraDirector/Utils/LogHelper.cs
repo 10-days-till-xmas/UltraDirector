@@ -1,26 +1,29 @@
-﻿using UnityEngine;
+﻿using BepInEx.Logging;
+using UnityEngine;
+// ReSharper disable once CheckNamespace
+namespace UltraDirector;
 
-namespace UltraDirector.Utils;
-
-public static class LogHelper
+public sealed partial class Plugin
 {
-    internal static void Log(object data) => Plugin.Logger.LogInfo(data);
-
-    internal static void LogWarning(object data) => Plugin.Logger.LogWarning(data);
-
-    internal static void LogError(object data) => Plugin.Logger.LogError(data);
-
-    internal static void LogDebug(object data) => Plugin.Logger.LogDebug(data);
-
-    internal static void DisplaySubtitle(string message, AudioSource audioSource = null!, bool ignoreSetting = false)
+    public static class LogHelper
     {
-        MonoSingleton<SubtitleController>.Instance!
-            .DisplaySubtitle(message, audioSource, ignoreSetting);
-    }
+        internal static void LogInfo(object data) => Logger.LogInfo(data);
 
-    internal static void DisplaySubtitle(string caption, float time, GameObject origin)
-    {
-        MonoSingleton<SubtitleController>.Instance!
-            .DisplaySubtitle(caption, time, origin);
+        internal static void LogWarning(object data) => Logger.LogWarning(data);
+
+        internal static void LogError(object data) => Logger.LogError(data);
+
+        internal static void LogDebug(object data) => Logger.LogDebug(data);
+
+        internal static void DisplaySubtitle(string message, AudioSource audioSource = null!,
+            bool ignoreSetting = false)
+        {
+            SubtitleController.Instance!.DisplaySubtitle(message, audioSource, ignoreSetting);
+        }
+
+        internal static void DisplaySubtitle(string caption, float time, GameObject origin)
+        {
+            SubtitleController.Instance!.DisplaySubtitle(caption, time, origin);
+        }
     }
 }

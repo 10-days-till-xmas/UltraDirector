@@ -10,13 +10,48 @@ public sealed partial class CameraRootCommand
         Branch("set",
             Leaf<string, float>("depth", SetCameraDepth),
             Leaf<string, float, float>("rectSize", SetCameraRectSize),
-            Leaf<string, float, float>("rectPosition", SetCameraRectPosition)
+            Leaf<string, float, float>("rectPosition", SetCameraRectPosition),
+            Branch("cullingMask",
+                Leaf<string, int>("set", SetCullingMask),
+                Leaf<string, GameObjectLayer>("add", AddToCullingMask),
+                Leaf<string, GameObjectLayer>("remove", RemoveFromCullingMask),
+                Leaf<string, GameObjectLayer>("toggle", ToggleCullingMask))
         );
+
+    private void ToggleCullingMask(string name, GameObjectLayer layer) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            camera.Camera.cullingMask ^= ((int)layer);
+            var state = ((GameObjectLayer)camera.Camera.cullingMask).HasFlagFast(layer);
+            Log.Info($"Camera \"{name}\" toggled layer: {layer}, state: {(state ? "active" : "inactive")}");
+        });
+
+
+    private void RemoveFromCullingMask(string name, GameObjectLayer layer) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            camera.Camera.cullingMask &= ~((int)layer);
+            Log.Info($"Camera \"{name}\" removed layer: {layer}");
+        });
+
+    private void AddToCullingMask(string name, GameObjectLayer layer) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            camera.Camera.cullingMask |= (int)layer;
+            Log.Info($"Camera \"{name}\" added layer: {layer}");
+        });
+
+    private void SetCullingMask(string name, int mask) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            camera.Camera.cullingMask = mask;
+            Log.Info($"Camera \"{name}\" mask set to: {mask}");
+        });
 
     private void SetCameraDepth(string name, float value) => TryGetCamera(name)
        .IfNotNullDo(camera =>
         {
-            camera.UnityCamera.depth = value;
+            camera.Camera.depth = value;
             Log.Info($"Camera \"{name}\" depth set to: {value}");
         });
 

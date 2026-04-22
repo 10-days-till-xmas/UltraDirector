@@ -16,7 +16,7 @@ var plugins = projects.Values
                       .Select(p =>
                        {
                            var testProj = projects.GetValueOrDefault(p.Name + ".Tests");
-                           return new PluginInfo(p, configuration, testProj);
+                           return new PluginInfo(p, testProj);
                        })
                       .ToList();
 #endregion

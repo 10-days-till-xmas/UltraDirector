@@ -7,12 +7,13 @@ using UltraDirector.Scripting.CSharp.Patchers;
 using UnityEngine.SceneManagement;
 
 namespace UltraDirector.Scripting.CSharp.AutoScripter;
+
 [ConfigureSingleton(SingletonFlags.PersistAutoInstance)]
 public sealed class AutoScripter : MonoSingleton<AutoScripter>
 {
-    private class ScriptFile
+    private sealed class ScriptFile
     {
-        public string FilePath { get; private set; }
+        public string FilePath { get; }
         private readonly FileSystemWatcher _watcher;
         public CoroutineScript CoroutineScript { get; private set; } = null!;
         public AutoScriptTrigger[] Triggers { get; set; } = [];
@@ -40,7 +41,7 @@ public sealed class AutoScripter : MonoSingleton<AutoScripter>
         }
     }
     // TODO: let scripts be loadable from a config
-    private List<ScriptFile> _scripts = [];
+    private readonly List<ScriptFile> _scripts = [];
 
     private Action<CheckPoint> _onCheckpointLoaded = null!;
     private void Awake()
@@ -50,6 +51,8 @@ public sealed class AutoScripter : MonoSingleton<AutoScripter>
         CheckpointPatcher.OnCheckpointReset += _onCheckpointLoaded;
         // TODO: load script paths from config
     }
+
+    public void AddScriptFile(string filePath) => _scripts.Add(new ScriptFile(filePath));
 
     private void OnDestroy()
     {

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using MonoMod.RuntimeDetour;
-using UnityEngine;
 
 namespace UltraDirector.Scripting.CSharp.Hooking;
 
@@ -15,7 +13,7 @@ public sealed class Hook : IDisposable
         Pre
     }
 
-    private class HookInfo(MethodInfo target, HookType hookType = HookType.Post ) : IEquatable<HookInfo>
+    private sealed class HookInfo(MethodInfo target, HookType hookType = HookType.Post ) : IEquatable<HookInfo>
     {
         public MethodInfo TargetMethod { get; } = target;
         public HookType HookType { get; } = hookType;

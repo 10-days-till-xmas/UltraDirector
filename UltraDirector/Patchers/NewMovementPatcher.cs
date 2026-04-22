@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.IO;
+using HarmonyLib;
 using UltraDirector.CameraLogic;
 using UnityEngine;
 
@@ -18,12 +19,11 @@ public class NewMovementPatcher
     {
         if (!Input.GetKeyDown(CameraManager.Instance!.SpawnCameraKey)) return;
 
-        Log("Spawning player camera...");
+        LogInfo("Spawning player camera...");
         var playerPos = __instance.transform.position + new Vector3(0, 1.5f, 0);
-        var playerRot = Quaternion.Euler(__instance.transform.eulerAngles);
-        var name = $"ukcam_{System.IO.Path.GetRandomFileName()}";
-        Log(CameraManager.Instance.TrySpawnCamera(name, playerPos, playerRot, out _)
-            ? $"Created camera: {name} at position {playerPos} with rotation {playerRot.eulerAngles}"
+        var name = $"ukcam_{Path.GetRandomFileName()}";
+        LogInfo(CameraManager.Instance.TrySpawnCamera(name, playerPos, __instance.transform.rotation, out var c)
+            ? $"Created camera: {name} at position {playerPos} with rotation {c.transform.rotation}"
             : "Camera already exists!");
     }
 }

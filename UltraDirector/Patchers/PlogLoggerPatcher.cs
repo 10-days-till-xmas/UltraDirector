@@ -4,7 +4,6 @@ using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 using plog;
-using UltraDirector.LogUtils;
 
 namespace UltraDirector.Patchers;
 
@@ -19,11 +18,12 @@ public static class PlogLoggerPatcher
     [HarmonyPostfix]
     public static void Postfix(Logger __instance)
     {
-        var frame = new StackFrame(1); // caller of the constructor
+        // 0: postfix
+        // 1: ctor
+        // 2: ctor caller
+        var frame = new StackFrame(2); // if you transpile this instead you can use 1
         var caller = frame.GetMethod();
-        Plugin.Logger.LogInfo($"Called from {caller.DeclaringType?.FullName}.{caller.Name}");
         if (!(caller.DeclaringType?.Namespace?.Contains("UltraDirector") ?? false)) return;
-        __instance.AddHandler(new BepinexPlogHandler(Plugin.Logger));
-        Plugin.Logger.LogInfo($"Added Handler");
+        __instance.AddHandler(Plugin.CreateBepinexPlogHandler());
     }
 }

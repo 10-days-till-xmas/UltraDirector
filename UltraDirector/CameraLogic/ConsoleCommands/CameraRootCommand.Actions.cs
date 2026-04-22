@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using UltraDirector.LogUtils;
+using UltraDirector.Utils;
 using UnityEngine;
 
 namespace UltraDirector.CameraLogic.ConsoleCommands;
@@ -30,7 +32,7 @@ public sealed partial class CameraRootCommand
     private void SpawnCamera(string? name)
     {
         if (string.IsNullOrWhiteSpace(name))
-            name ??= $"ukcam_{System.IO.Path.GetRandomFileName()}";
+            name ??= $"ukcam_{Path.GetRandomFileName()}";
 
         var nm = NewMovement.Instance!;
         var playerPos = nm.transform.position + new Vector3(0, 1.5f, 0);
@@ -57,4 +59,26 @@ public sealed partial class CameraRootCommand
             Log.LogInfo($"- {name}: {camera}");
         }
     }
+
+    private void StartRecording(string name) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            var path = Path.Combine(Plugin.Directory, $"{name}_recording.mkv");
+            camera.StartRecording(path);
+            Log.Info($"Started recording on camera '{name}' to path: {path}");
+        });
+
+    private void StartRecordingWithTime(string name, float secs) => TryGetCamera(name)
+       .IfNotNullDo(camera =>
+        {
+            var path = Path.Combine(Plugin.Directory, $"{name}_recording.mkv");
+            camera.StartRecording(path);
+            Log.Info($"Started recording on camera '{name}' to path: {path}");
+            camera.StartCoroutine(CoroutineHelper.DoAfterDelay(5, camera.StopRecording)); // Record for 10 seconds
+        });
+
+    private void StopRecording(string name) => TryGetCamera(name)
+       .IfNotNullDo(camera => camera.StopRecording());
+
+    private static void RemuxVideo(string filePath) => Remux.ToMp4(filePath);
 }
